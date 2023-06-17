@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["PUB.API.csproj", "PUB.API/"]
 RUN dotnet restore "PUB.API/PUB.API.csproj"
-COPY . .
+COPY PUB.API .
 WORKDIR "/src/PUB.API"
 RUN dotnet build "PUB.API.csproj" -c Release -o /app/build
 
