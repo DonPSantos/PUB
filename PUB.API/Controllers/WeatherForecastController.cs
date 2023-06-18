@@ -51,7 +51,7 @@ namespace PUB.API.Controllers
         [HttpGet("teste1")]
         public string Teste1()
         {
-            return _configuration.GetValue("Appsettings:teste", "");
+            return _configuration.GetValue("AppSettings:teste", "");
 
         }
 
