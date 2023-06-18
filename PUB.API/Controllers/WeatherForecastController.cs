@@ -16,11 +16,15 @@ namespace PUB.API.Controllers
 
         public IOptions<AppSettings> _appSettings { get; }
 
+        private readonly IConfiguration _configuration;
+
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
-                                        IOptions<AppSettings> appSettings)
+                                        IOptions<AppSettings> appSettings,
+                                        IConfiguration configuration)
         {
             _logger = logger;
             _appSettings = appSettings;
+            _configuration = configuration;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -36,10 +40,17 @@ namespace PUB.API.Controllers
         }
 
         [HttpGet("appsettings")]
-        public string Appsettings()
+        public AppSettings Appsettings()
         {
-            var teste = _appSettings.Value.Teste;
-            return teste;
+            return _configuration.Get<AppSettings>();
+             
+        }
+
+        [HttpGet("mensagem")]
+        public string Mensagem()
+        {
+            return _configuration.GetValue("MENSAGEM","");
+
         }
 
         [HttpGet("env")]
