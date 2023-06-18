@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace PUB.API.Controllers
 {
@@ -13,9 +14,13 @@ namespace PUB.API.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public IOptions<AppSettings> _appSettings { get; }
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,
+                                        IOptions<AppSettings> appSettings)
         {
             _logger = logger;
+            _appSettings = appSettings;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -28,6 +33,19 @@ namespace PUB.API.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("appsettings")]
+        public string Appsettings()
+        {
+            var teste = _appSettings.Value.Teste;
+            return teste;
+        }
+
+        [HttpGet("env")]
+        public string GetEnvironment()
+        {
+            return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
     }
 }
