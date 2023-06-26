@@ -13,7 +13,7 @@ namespace PUB.API.V1.Controllers
     {
         private readonly IOneDrinkPromoServices _oneDrinkPromoServices;
 
-        public OneDrinkPromoController(INotificator notificator, IMapper mapper, IOneDrinkPromoServices oneDrinkPromoServices) : base(notificator, mapper)
+        public OneDrinkPromoController(ILogger<OneDrinkPromoController> logger, INotificator notificator, IMapper mapper, IOneDrinkPromoServices oneDrinkPromoServices) : base(logger, notificator, mapper)
         {
             _oneDrinkPromoServices = oneDrinkPromoServices;
         }
@@ -21,9 +21,18 @@ namespace PUB.API.V1.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterAsync(RegisterOneDrinkPromo register)
         {
-            var domainEntity = _mapper.Map<OneDrinkPromo>(register);
-            await _oneDrinkPromoServices.Register(domainEntity);
-            return CustomResponse(domainEntity);
+            try
+            {
+                if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+                var domainEntity = _mapper.Map<OneDrinkPromo>(register);
+                await _oneDrinkPromoServices.Register(domainEntity);
+                return CustomResponse(domainEntity);
+            }
+            catch (Exception ex)
+            {
+                return CustomResponse(exception: ex);
+            }
         }
     }
 }

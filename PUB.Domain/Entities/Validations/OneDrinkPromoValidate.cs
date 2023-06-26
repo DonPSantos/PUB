@@ -22,7 +22,6 @@ namespace PUB.Domain.Entities.Validations
                 .Length(2, 200).WithMessage("O campo {PropertyName} precisa ter entre {MinLength} e {MaxLength} caracteres");
 
             RuleFor(c => c.Birth)
-                .NotEmpty().WithMessage("O campo {PropertyName} precisa ser fornecido")
                 .LessThan(DateTime.Now.AddYears(-15)).WithMessage("A idade minima é 15 anos.");
         }
     }

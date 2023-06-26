@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using PUB.API.Configurations;
 using PUB.API.Configurations.Swagger;
 using PUB.Data.Context;
+using WatchDog;
+using WatchDog.src.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,19 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 builder.Services.AddControllers();
+
+#region Watchdog
+
+builder.Logging.AddWatchDogLogger();
+
+builder.Services.AddWatchDogServices(opt =>
+{
+    opt.IsAutoClear = true;
+    opt.DbDriverOption = WatchDogDbDriverEnum.PostgreSql;
+    opt.SetExternalDbConnString = builder.Configuration.GetConnectionString("DefaultConnection");
+});
+
+#endregion Watchdog
 
 builder.Services.AddDbContext<PUBContext>(opt =>
                 opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +56,8 @@ builder.Services.AddVersionedApiExplorer(setup =>
 
 var app = builder.Build();
 
+app.UseWatchDogExceptionLogger();
+
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -58,7 +75,11 @@ if (app.Environment.IsDevelopment())
         }
     });
 }
-
+app.UseWatchDog(opt =>
+{
+    opt.WatchPageUsername = "admin";
+    opt.WatchPagePassword = "admin";
+});
 //app.UseHttpsRedirection();
 
 app.UseAuthorization();

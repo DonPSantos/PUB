@@ -10,11 +10,13 @@ namespace PUB.API.V1.Controllers
     {
         protected readonly INotificator _notificator;
         protected readonly IMapper _mapper;
+        protected readonly ILogger<MainController> _logger;
 
-        protected MainController(INotificator notificator, IMapper mapper)
+        protected MainController(ILogger<MainController> logger, INotificator notificator, IMapper mapper)
         {
             _notificator = notificator;
             _mapper = mapper;
+            _logger = logger;
         }
 
         protected bool IsOperationValid()
@@ -22,8 +24,17 @@ namespace PUB.API.V1.Controllers
             return !_notificator.HasNotification();
         }
 
-        protected ActionResult CustomResponse(object result = null)
+        protected ActionResult CustomResponse(object result = null, Exception exception = null)
         {
+            if (exception is not null)
+            {
+                return Problem(
+                    title: exception.Message,
+                    statusCode: 500,
+                    type: exception.GetType().ToString()
+                    );
+            }
+
             if (IsOperationValid())
                 return Ok(new
                 {
@@ -31,7 +42,7 @@ namespace PUB.API.V1.Controllers
                     data = result
                 });
 
-            return Ok(new
+            return BadRequest(new
             {
                 sucesso = false,
                 erros = _notificator.GetNotifications().Select(n => n.Message)
