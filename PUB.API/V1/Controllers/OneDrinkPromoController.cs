@@ -24,7 +24,6 @@ namespace PUB.API.V1.Controllers
         {
             try
             {
-                return ResponseInternalServerError();
                 if (!ModelState.IsValid) return ResponseBadRequest(ModelState);
 
                 var domainEntity = _mapper.Map<OneDrinkPromo>(register);
