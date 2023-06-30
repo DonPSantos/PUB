@@ -2,12 +2,6 @@
 using FluentValidation.Results;
 using PUB.Domain.Entities;
 using PUB.Domain.Interfaces;
-using PUB.Domain.Notifications;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PUB.Domain.Services
 {
@@ -30,7 +24,7 @@ namespace PUB.Domain.Services
 
         protected void Notify(string mensagem)
         {
-            _notificador.Handle(new Notification(mensagem));
+            _notificador.Handle(mensagem);
         }
 
         protected bool ExecValidate<TV, TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : EntityBase

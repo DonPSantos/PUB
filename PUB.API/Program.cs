@@ -13,6 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
+builder.Services.AddCors(policyBuilder =>
+    policyBuilder.AddDefaultPolicy(policy =>
+        policy.WithOrigins("*").AllowAnyHeader().AllowAnyHeader())
+);
+
 builder.Services.AddControllers();
 
 #region Watchdog
@@ -55,6 +60,8 @@ builder.Services.AddVersionedApiExplorer(setup =>
 });
 
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseWatchDogExceptionLogger();
 

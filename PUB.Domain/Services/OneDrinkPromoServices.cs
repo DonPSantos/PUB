@@ -28,9 +28,19 @@ namespace PUB.Domain.Services
 
         public async Task Register(OneDrinkPromo oneDrinkPromo)
         {
+            oneDrinkPromo.Normalize();
             if (!ExecValidate(new OneDrinkPromoValidate(), oneDrinkPromo)) return;
 
-            await _oneDrinkPromoRepository.Add(oneDrinkPromo);
+            var exist = await _oneDrinkPromoRepository.Find(x => x.Cpf == oneDrinkPromo.Cpf);
+
+            if (exist != null)
+            {
+                Notify("CPF já existe na base.");
+            }
+            else
+            {
+                await _oneDrinkPromoRepository.Add(oneDrinkPromo);
+            }
         }
 
         public async Task UsePromo(OneDrinkPromo oneDrinkPromo)

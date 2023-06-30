@@ -1,23 +1,22 @@
 ﻿using PUB.Domain.Interfaces;
-using PUB.Domain.Notifications;
 
 namespace PUB.Application.Notifications
 {
     public class Notificator : INotificator
     {
-        private List<Notification> _notifications;
+        private List<string> _notifications;
 
         public Notificator()
         {
-            _notifications = new List<Notification>();
+            _notifications = new List<string>();
         }
 
-        public void Handle(Notification notificacao)
+        public void Handle(string notificacao)
         {
             _notifications.Add(notificacao);
         }
 
-        public List<Notification> GetNotifications()
+        public List<string> GetNotifications()
         {
             return _notifications;
         }

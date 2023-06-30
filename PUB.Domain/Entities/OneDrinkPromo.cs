@@ -19,5 +19,10 @@
         {
             IsUsed = true;
         }
+
+        public void Normalize()
+        {
+            Cpf = Cpf.Trim().Replace(".", "").Replace("-", "");
+        }
     }
 }

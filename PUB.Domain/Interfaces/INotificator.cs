@@ -1,12 +1,10 @@
-﻿using PUB.Domain.Notifications;
-
-namespace PUB.Domain.Interfaces
+﻿namespace PUB.Domain.Interfaces
 {
     public interface INotificator
     {
-        void Handle(Notification notificacao);
+        void Handle(string notificacao);
 
-        List<Notification> GetNotifications();
+        List<string> GetNotifications();
 
         bool HasNotification();
     }
